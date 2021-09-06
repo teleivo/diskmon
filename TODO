@@ -1,0 +1,4 @@
+* figure out why I get syscall errors on certain directories?
+* run check regularly without having to run binary as a cron job. allow
+configuration via flags (using cron like syntax?)
+* send notification to slack

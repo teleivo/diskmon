@@ -1,0 +1,13 @@
+---
+version: "3.9"
+
+services:
+  diskmon:
+    image: diskmon
+    container_name: diskmon
+    entrypoint:
+      - "/bin/diskmon"
+      - "-basedir"
+      - "/home"
+    volumes:
+      - "/home:/home:ro"
