@@ -31,14 +31,13 @@ func run(args []string, out io.Writer) error {
 	if err != nil {
 		return err
 	}
-
 	if *basedir == "" {
 		return errors.New("basedir must be provided")
 	}
 
 	t := time.NewTicker(time.Minute * time.Duration(*interval))
 	defer t.Stop()
-
+	// check usage once right after starting up
 	checkUsage(*basedir, *limit, out)
 	for {
 		select {
