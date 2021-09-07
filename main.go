@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	"github.com/dustin/go-humanize"
 	"github.com/teleivo/diskmon/fstat"
@@ -43,13 +44,11 @@ func run(args []string, out io.Writer) error {
 			continue
 		}
 
-		fmt.Printf("file.Name()= %+v\n", file.Name())
-		fstat, err := fstat.GetFilesystemStat(file.Name())
+		fstat, err := fstat.GetFilesystemStat(filepath.Join(*basedir, file.Name()))
 		if err != nil {
 			// TODO what do to with such errors? also send a notification?
-			// errors are weird since the directories do exist
-			// why is statfs_t returning an error like this?
 			err = fmt.Errorf("error getting filesystem stats from %q: %w", file.Name(), err)
+			// TODO remove printing a newline once I have decided on how to handle errors
 			fmt.Fprint(out, err, "\n")
 			continue
 		}
