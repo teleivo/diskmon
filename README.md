@@ -1,5 +1,7 @@
 # Diskmon
 
+[![build and test](https://github.com/teleivo/diskmon/actions/workflows/build_test.yml/badge.svg)](https://github.com/teleivo/diskmon/actions/workflows/build_test.yml)
+
 Diskmon will notify you if a disk has reached a configurable size limit.
 
 ## Get started
