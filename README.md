@@ -66,7 +66,7 @@ If you have prometheus already please use the [node exporter](https://github.com
 It provides mount point monitoring and much more!
 
 * Notifications can only be sent to Slack using a [Slack App](https://api.slack.com/start/building)
-or to stdout
+or to stdout.
 You can of course adapt the code to send notifications anywhere :smile:
 * It will not discover all mount points for you like the [node exporter](https://github.com/prometheus/node_exporter).
 You can only provide one directory in which your mount points should be.
