@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/dustin/go-humanize"
 	"github.com/teleivo/diskmon/fstat"
@@ -25,6 +26,7 @@ func run(args []string, out io.Writer) error {
 	flags := flag.NewFlagSet(args[0], flag.ExitOnError)
 	basedir := flags.String("basedir", "", "statfs syscall information will be printed for each directory (depth 1) in this base directory")
 	limit := flags.Uint64("limit", 80, "percentage of disk usage at which notification should be sent")
+	interval := flags.Int("interval", 60, "interval in minutes at which the disk usage will be checked")
 	err := flags.Parse(args[1:])
 	if err != nil {
 		return err
@@ -34,7 +36,21 @@ func run(args []string, out io.Writer) error {
 		return errors.New("basedir must be provided")
 	}
 
-	files, err := ioutil.ReadDir(*basedir)
+	t := time.NewTicker(time.Minute * time.Duration(*interval))
+	defer t.Stop()
+
+	checkUsage(*basedir, *limit, out)
+	for {
+		select {
+		case <-t.C:
+			checkUsage(*basedir, *limit, out)
+		}
+	}
+}
+
+func checkUsage(basedir string, limit uint64, out io.Writer) error {
+	fmt.Fprintf(out, "Checking disk usage\n")
+	files, err := ioutil.ReadDir(basedir)
 	if err != nil {
 		return fmt.Errorf("error reading basedir: %w", err)
 	}
@@ -44,7 +60,7 @@ func run(args []string, out io.Writer) error {
 			continue
 		}
 
-		fstat, err := fstat.GetFilesystemStat(filepath.Join(*basedir, file.Name()))
+		fstat, err := fstat.GetFilesystemStat(filepath.Join(basedir, file.Name()))
 		if err != nil {
 			// TODO what do to with such errors? also send a notification?
 			err = fmt.Errorf("error getting filesystem stats from %q: %w", file.Name(), err)
@@ -53,10 +69,9 @@ func run(args []string, out io.Writer) error {
 			continue
 		}
 
-		if fstat.IsExceedingLimit(*limit) {
-			fmt.Fprintf(out, "Free/Total %s/%s %q - reached limit of %d%%\n", humanize.Bytes(fstat.Free()), humanize.Bytes(fstat.Total()), file.Name(), *limit)
+		if fstat.IsExceedingLimit(limit) {
+			fmt.Fprintf(out, "Free/Total %s/%s %q - reached limit of %d%%\n", humanize.Bytes(fstat.Free()), humanize.Bytes(fstat.Total()), file.Name(), limit)
 		}
 	}
-
 	return nil
 }
