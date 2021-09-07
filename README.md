@@ -1,6 +1,8 @@
 # Diskmon
 
-[![build and test](https://github.com/teleivo/diskmon/actions/workflows/build_test.yml/badge.svg)](https://github.com/teleivo/diskmon/actions/workflows/build_test.yml)
+[![Build and Test](https://github.com/teleivo/diskmon/actions/workflows/build_test.yml/badge.svg)](https://github.com/teleivo/diskmon/actions/workflows/build_test.yml)
+[![Release](https://img.shields.io/github/release/teleivo/diskmon.svg)](https://github.com/teleivo/diskmon/releases/latest)
+[![Powered By: GoReleaser](https://img.shields.io/badge/powered%20by-goreleaser-green.svg)](https://github.com/goreleaser)
 
 Diskmon will notify you if a disk has reached a configurable size limit.
 
@@ -45,3 +47,5 @@ for the use case we had ([see Design Rationale](#design-rationale))
 
 If you have prometheus already please use the [node exporter](https://github.com/prometheus/node_exporter).
 It provides mount point monitoring and much more!
+
+
