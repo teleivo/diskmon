@@ -6,7 +6,7 @@ Diskmon will notify you if a disk has reached a configurable size limit.
 
 ## Design Rationale
 
-Diskmon was created to monitor volumes on [Digital Ocean](digitalocean.com).
+Diskmon was created to monitor volumes on [Digital Ocean](https://www.digitalocean.com/).
 Digital ocean does not provide that feature in its droplet metrics (as of 09/2021).
 
 We chose to implement this ourselves in the simplest way we could think of. We
