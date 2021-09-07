@@ -4,6 +4,16 @@
 
 Diskmon will notify you if a disk has reached a configurable size limit.
 
+## Design Rationale
+
+Diskmon was created to monitor volumes on [Digital Ocean](digitalocean.com).
+Digital ocean does not provide that feature in its droplet metrics (as of 09/2021).
+
+We chose to implement this ourselves in the simplest way we could think of. We
+did not want to setup [Prometheus](https://prometheus.io/) for this. If you
+have prometheus already please use the [node exporter](https://github.com/prometheus/node_exporter).
+It provides mount point monitoring and much more!
+
 ## Get started
 
 ### Using Binary
@@ -29,3 +39,9 @@ docker run --volume /home:/home:ro diskmon -basedir /hom
 ```
 
 ## Limitations
+
+The diskmon is not a general purpose disk monitor. It is specifically designed
+for the use case we had ([see Design Rationale](#design-rationale))
+
+If you have prometheus already please use the [node exporter](https://github.com/prometheus/node_exporter).
+It provides mount point monitoring and much more!
