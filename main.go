@@ -5,14 +5,11 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
 	"time"
 
-	"github.com/dustin/go-humanize"
-	"github.com/teleivo/diskmon/fstat"
+	"github.com/teleivo/diskmon/usage"
 )
 
 func main() {
@@ -40,8 +37,9 @@ func run(args []string, out io.Writer) error {
 	defer t.Stop()
 
 	logger := log.New(out, args[0]+" ", log.LUTC)
+
 	// check usage once right after starting up
-	err = checkUsage(*basedir, *limit, logger, out)
+	err = usage.Check(*basedir, *limit, logger, out)
 	if err != nil {
 		return err
 	}
@@ -52,57 +50,7 @@ func run(args []string, out io.Writer) error {
 			// I think its a good idea to call ReadDir every time we check
 			// usage since one could add a volume to a droplet after the
 			// diskmon has started
-			checkUsage(*basedir, *limit, logger, out)
+			usage.Check(*basedir, *limit, logger, out)
 		}
 	}
-}
-
-type notification struct {
-	Limits []string
-	Errors []error
-}
-
-func checkUsage(basedir string, limit uint64, logger *log.Logger, out io.Writer) error {
-	logger.Print("Checking disk usage")
-
-	n, err := checkDiskUsage(basedir, limit)
-	if err != nil {
-		return err
-	}
-
-	for _, l := range n.Limits {
-		out.Write([]byte(l))
-		out.Write([]byte("\n"))
-	}
-	for _, e := range n.Errors {
-		out.Write([]byte(e.Error()))
-		out.Write([]byte("\n"))
-	}
-
-	return nil
-}
-
-func checkDiskUsage(basedir string, limit uint64) (notification, error) {
-	n := notification{}
-	files, err := ioutil.ReadDir(basedir)
-	if err != nil {
-		return n, fmt.Errorf("error reading basedir: %w", err)
-	}
-
-	for _, file := range files {
-		if !file.IsDir() {
-			continue
-		}
-
-		fstat, err := fstat.GetFilesystemStat(filepath.Join(basedir, file.Name()))
-		if err != nil {
-			n.Errors = append(n.Errors, fmt.Errorf("error getting filesystem stats from %q: %w", file.Name(), err))
-			continue
-		}
-
-		if fstat.IsExceedingLimit(limit) {
-			n.Limits = append(n.Limits, fmt.Sprintf("Free/Total %s/%s %q - reached limit of %d%%", humanize.Bytes(fstat.Free()), humanize.Bytes(fstat.Total()), file.Name(), limit))
-		}
-	}
-	return n, nil
 }
