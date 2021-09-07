@@ -3,6 +3,12 @@
 * decide how to deal with errors on a check
 * decide whether to notify on exceeding given limit or once the limit is
  reached
-* happy with the notification message? should we add the hostname? in case
+* happy with the notification message?
+* should we add the hostname? in case
  diskmon runs on multiple hosts and posts into the same workspace its not clear
  where the action needs to be taken
+Use a https://api.slack.com/reference/block-kit/blocks#context
+with an image element like so
+ https://github.com/slack-go/slack/blob/93fe17cfad827ebb34316c683f29377c9be910e3/examples/blocks/blocks.go#L300-L308
+to show the host
+does the DO droplet set a useful $HOST or $HOSTNAME
