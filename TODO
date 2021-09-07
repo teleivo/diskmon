@@ -3,3 +3,6 @@
 * decide how to deal with errors on a check
 * decide whether to notify on exceeding given limit or once the limit is
  reached
+* happy with the notification message? should we add the hostname? in case
+ diskmon runs on multiple hosts and posts into the same workspace its not clear
+ where the action needs to be taken
