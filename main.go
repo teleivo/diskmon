@@ -26,7 +26,7 @@ func run(args []string, out io.Writer) error {
 	flags := flag.NewFlagSet(args[0], flag.ExitOnError)
 	basedir := flags.String("basedir", "", "statfs syscall information will be printed for each directory (depth 1) in this base directory")
 	limit := flags.Uint64("limit", 80, "percentage of disk usage at which notification should be sent")
-	interval := flags.Int("interval", 60, "interval in minutes at which the disk usage will be checked")
+	interval := flags.Uint("interval", 60, "interval in minutes at which the disk usage will be checked")
 	err := flags.Parse(args[1:])
 	if err != nil {
 		return err
