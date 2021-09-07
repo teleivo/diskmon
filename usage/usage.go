@@ -11,36 +11,57 @@ import (
 	"github.com/teleivo/diskmon/fstat"
 )
 
-type Notification struct {
+type Report struct {
 	Limits []string
 	Errors []error
 }
 
-func Check(basedir string, limit uint64, logger *log.Logger, out io.Writer) error {
-	logger.Print("Checking disk usage")
+type Notifier interface {
+	Notify(Report) error
+}
 
-	n, err := checkDiskUsage(basedir, limit)
-	if err != nil {
-		return err
-	}
+type writeNotifier struct {
+	io.Writer
+}
 
-	for _, l := range n.Limits {
-		out.Write([]byte(l))
-		out.Write([]byte("\n"))
+func (wn writeNotifier) Notify(r Report) error {
+	for _, l := range r.Limits {
+		wn.Write([]byte(l))
+		wn.Write([]byte("\n"))
 	}
-	for _, e := range n.Errors {
-		out.Write([]byte(e.Error()))
-		out.Write([]byte("\n"))
+	for _, e := range r.Errors {
+		wn.Write([]byte(e.Error()))
+		wn.Write([]byte("\n"))
 	}
 
 	return nil
 }
 
-func checkDiskUsage(basedir string, limit uint64) (Notification, error) {
-	n := Notification{}
+func WriteNotifier(w io.Writer) Notifier {
+	return writeNotifier{w}
+}
+
+func Check(basedir string, limit uint64, logger *log.Logger, nt Notifier) error {
+	logger.Print("Checking disk usage")
+
+	r, err := checkDiskUsage(basedir, limit)
+	if err != nil {
+		return err
+	}
+
+	if len(r.Limits) == 0 && len(r.Errors) == 0 {
+		logger.Print("No limits exceeded and no errors found")
+		return nil
+	}
+
+	return nt.Notify(r)
+}
+
+func checkDiskUsage(basedir string, limit uint64) (Report, error) {
+	r := Report{}
 	files, err := ioutil.ReadDir(basedir)
 	if err != nil {
-		return n, fmt.Errorf("error reading basedir: %w", err)
+		return r, fmt.Errorf("error reading basedir: %w", err)
 	}
 
 	for _, file := range files {
@@ -50,13 +71,13 @@ func checkDiskUsage(basedir string, limit uint64) (Notification, error) {
 
 		fstat, err := fstat.GetFilesystemStat(filepath.Join(basedir, file.Name()))
 		if err != nil {
-			n.Errors = append(n.Errors, fmt.Errorf("error getting filesystem stats from %q: %w", file.Name(), err))
+			r.Errors = append(r.Errors, fmt.Errorf("error getting filesystem stats from %q: %w", file.Name(), err))
 			continue
 		}
 
 		if fstat.IsExceedingLimit(limit) {
-			n.Limits = append(n.Limits, fmt.Sprintf("Free/Total %s/%s %q - reached limit of %d%%", humanize.Bytes(fstat.Free()), humanize.Bytes(fstat.Total()), file.Name(), limit))
+			r.Limits = append(r.Limits, fmt.Sprintf("Free/Total %s/%s %q - reached limit of %d%%", humanize.Bytes(fstat.Free()), humanize.Bytes(fstat.Total()), file.Name(), limit))
 		}
 	}
-	return n, nil
+	return r, nil
 }
