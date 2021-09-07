@@ -1,3 +1,5 @@
-* run check regularly without having to run binary as a cron job. allow
-configuration via flags (using cron like syntax?)
 * send notification to slack
+* setup propper logging
+* decide how to deal with errors on a check
+* decide whether to notify on exceeding given limit or once the limit is
+ reached
