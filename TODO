@@ -1,9 +1,5 @@
 # Behavior
 * decide how to deal with errors on a check
-* try `fstat -f go.mod` (or on any other file), should I report the Free or
- Available? So `Bavail is the amount of blocks available to unprivileged users.
- Bfree is simply the total number of free blocks` Is the app running as root in
- the droplet?
 
 // syscall statfs struct represented in unix.Statfs_t
 // struct statfs {
@@ -15,11 +11,10 @@
 // }
 
 # Technical
-* setup propper logging
+* logging does not report the current time in UTC as I thought it would with my current configuration
 
 # Notification Message
 
-* send notification to slack
 * happy with the notification message?
 * should we add the hostname? in case
  diskmon runs on multiple hosts and posts into the same workspace its not clear

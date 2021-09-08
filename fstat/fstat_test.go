@@ -9,7 +9,8 @@ import (
 func TestFilesystemStat(t *testing.T) {
 	t.Run("FreeTotalUsed", func(t *testing.T) {
 		fs := FilesystemStat(unix.Statfs_t{
-			Bavail: 100,
+			Ffree:  100,
+			Bavail: 10,
 			Blocks: 400,
 			Bsize:  1024,
 		})
@@ -32,7 +33,8 @@ func TestFilesystemStat(t *testing.T) {
 		}{
 			"BelowLimit": {
 				stat: FilesystemStat(unix.Statfs_t{
-					Bavail: 100,
+					Ffree:  100,
+					Bavail: 10,
 					Blocks: 400,
 					Bsize:  1024,
 				}),
@@ -41,7 +43,8 @@ func TestFilesystemStat(t *testing.T) {
 			},
 			"AtLimit": {
 				stat: FilesystemStat(unix.Statfs_t{
-					Bavail: 100,
+					Ffree:  100,
+					Bavail: 10,
 					Blocks: 400,
 					Bsize:  1024,
 				}),
@@ -50,6 +53,7 @@ func TestFilesystemStat(t *testing.T) {
 			},
 			"AboveLimit": {
 				stat: FilesystemStat(unix.Statfs_t{
+					Ffree:  100,
 					Bavail: 100,
 					Blocks: 400,
 					Bsize:  1024,

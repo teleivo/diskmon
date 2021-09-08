@@ -24,7 +24,7 @@ type Report struct {
 type Stats struct {
 	Path  string // path on a disk that hit the set limit
 	Limit uint64 // limit that the disk usage reached or exceeded
-	Free  uint64 // number of free bytes available to a non-privileged user
+	Free  uint64 // number of free bytes available
 	Used  uint64 // number of used bytes
 	Total uint64 // total number of bytes
 }
