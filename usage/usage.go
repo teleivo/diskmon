@@ -1,3 +1,4 @@
+// Package usage provides a disk usage check and notification mechanism.
 package usage
 
 import (
@@ -11,11 +12,24 @@ import (
 	"github.com/teleivo/diskmon/fstat"
 )
 
+// Report is the result of a disk usage check.
 type Report struct {
-	Limits []string
-	Errors []error
+	Limits []Stats // all disk usages exceeding a set limit
+	Errors []error // encountered while gathering disk usages
 }
 
+// TODO embed fstat.FilesystemStat? I do not necessarily want to expose its
+// IsLimitExceeded method though
+// Stats are disk usage statistics of a disk exceeding a set limit.
+type Stats struct {
+	Path  string // path at which disk usage was exceeded
+	Limit uint64 // limit that the disk usage exceeded
+	Free  uint64 // number of free bytes available to a non-privileged user
+	Used  uint64 // number of used bytes
+	Total uint64 // total number of bytes
+}
+
+// Notifier notifies interested parties of a usage report.
 type Notifier interface {
 	Notify(Report) error
 }
@@ -26,7 +40,7 @@ type writeNotifier struct {
 
 func (wn writeNotifier) Notify(r Report) error {
 	for _, l := range r.Limits {
-		wn.Write([]byte(l))
+		fmt.Fprintf(wn, "Free/Total %s/%s %q - reached limit of %d%%", humanize.Bytes(l.Free), humanize.Bytes(l.Total), l.Path, l.Limit)
 		wn.Write([]byte("\n"))
 	}
 	for _, e := range r.Errors {
@@ -37,10 +51,13 @@ func (wn writeNotifier) Notify(r Report) error {
 	return nil
 }
 
+// WriteNotifier is a line-based usage Notifier. Every usage report stat and
+// error will be printed on a dedicated line.
 func WriteNotifier(w io.Writer) Notifier {
 	return writeNotifier{w}
 }
 
+// Check reports exceeding disk usage.
 func Check(basedir string, limit uint64, logger *log.Logger, nt Notifier) error {
 	logger.Print("Checking disk usage")
 
@@ -76,7 +93,13 @@ func checkDiskUsage(basedir string, limit uint64) (Report, error) {
 		}
 
 		if fstat.IsExceedingLimit(limit) {
-			r.Limits = append(r.Limits, fmt.Sprintf("Free/Total %s/%s %q - reached limit of %d%%", humanize.Bytes(fstat.Free()), humanize.Bytes(fstat.Total()), file.Name(), limit))
+			r.Limits = append(r.Limits, Stats{
+				Path:  file.Name(),
+				Limit: limit,
+				Free:  fstat.Free(),
+				Used:  fstat.Used(),
+				Total: fstat.Total(),
+			})
 		}
 	}
 	return r, nil

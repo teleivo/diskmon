@@ -7,6 +7,15 @@
  Bfree is simply the total number of free blocks` Is the app running as root in
  the droplet?
 
+// syscall statfs struct represented in unix.Statfs_t
+// struct statfs {
+// f_bsize;   /* Optimal transfer block size */
+// f_blocks;  /* Total data blocks in filesystem */
+// f_bfree;   /* Free blocks in filesystem */
+// f_bavail;  /* Free blocks available to unprivileged user
+// ...
+// }
+
 # Technical
 * setup propper logging
 

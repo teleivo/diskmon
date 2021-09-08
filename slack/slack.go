@@ -1,9 +1,11 @@
 package slack
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
+	"github.com/dustin/go-humanize"
 	"github.com/slack-go/slack"
 	"github.com/teleivo/diskmon/usage"
 )
@@ -24,9 +26,8 @@ func New(token, channel string, logger *log.Logger) *Notifier {
 
 func (n *Notifier) Notify(r usage.Report) error {
 	var sb strings.Builder
-	l := strings.Join(r.Limits, "\n")
-	if l != "" {
-		sb.WriteString(l)
+	for _, l := range r.Limits {
+		fmt.Fprintf(&sb, "Free/Total %s/%s %q - reached limit of %d%%\n", humanize.Bytes(l.Free), humanize.Bytes(l.Total), l.Path, l.Limit)
 	}
 	for _, e := range r.Errors {
 		sb.WriteString(e.Error())
