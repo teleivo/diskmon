@@ -1,8 +1,18 @@
-* send notification to slack
-* setup propper logging
+# Behavior
 * decide how to deal with errors on a check
 * decide whether to notify on exceeding given limit or once the limit is
  reached
+* try `fstat -f go.mod` (or on any other file), should I report the Free or
+ Available? So `Bavail is the amount of blocks available to unprivileged users.
+ Bfree is simply the total number of free blocks` Is the app running as root in
+ the droplet?
+
+# Technical
+* setup propper logging
+
+# Notification Message
+
+* send notification to slack
 * happy with the notification message?
 * should we add the hostname? in case
  diskmon runs on multiple hosts and posts into the same workspace its not clear
