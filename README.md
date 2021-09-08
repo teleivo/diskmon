@@ -18,12 +18,44 @@ It provides mount point monitoring and much more!
 
 ## Get started
 
+### Download
 Dowload a [pre-built binary](https://github.com/teleivo/diskmon/releases) or build the binary yourself
 
 ```sh
-go build -o /usr/local/bin/diskmon
+wget https://github.com/teleivo/diskmon/releases/download/v${DISKMON_VERSION}/diskmon_${DISKMON_VERSION}_${DISKMON_TARGET}.tar.gz
+mkdir ./diskmon
+tar -xf diskmon_${DISKMON_VERSION}_linux_x86_64.tar.gz --directory ./diskmon
+rm diskmon_${DISKMON_VERSION}_linux_x86_64.tar.gz
 ```
 
+### Run
+```sh
+./diskmon/diskmon -basedir <directory> -limit 65
+```
+
+### Notifications
+
+Notifications can be sent to
+* stdout (by default)
+* or Slack using a [Slack App](https://api.slack.com/start/building)
+
+For Slack please follow the Slack documentation on how to create a Slack App Bot.
+You can also follow this YouTube tutorial [Golang Tutorial: Build a Slack Bot](https://youtu.be/n-7l-N541u0).
+
+You will then need to pass the Slack Bot **Bot User OAuth Token** and the channel ID to
+the binary via CLI flags.
+
+Prefer passing credentials for example like so
+
+```sh
+diskmon -basedir <directory> -limit 65 \
+  -slackToken $SLACK_TOKEN \
+  -slackChannel $SLACK_CHANNEL &
+```
+
+so that the credentials are not in your shell history.
+
+## Run from source
 Change the destination to a path of your choice and make sure it can be found
 by your shell via the $PATH variable.
 
@@ -35,27 +67,10 @@ go run main.go -basedir <directory> -limit 65
 
 which will write usage reports to stdout.
 
-### Notifications
-
-Notifications can be sent to
-* stdout (by default)
-* or Slack using a [Slack App](https://api.slack.com/start/building)
-
-For Slack please follow the Slack documentation on how to create a Slack App Bot.
-You can also follow this YouTube tutorial [Golang Tutorial: Build a Slack Bot](https://youtu.be/n-7l-N541u0).
-
-You will then need to pass the Slack Bot User OAuth Token and the channel ID to
-the binary via CLI flags.
-
-Prefer passing credentials for example like so
-
+## Build
 ```sh
-diskmon -basedir <directory> -limit 65 \
-  -slackToken $SLACK_TOKEN \
-  -slackChannel $SLACK_CHANNEL
+go build -o /usr/local/bin/diskmon
 ```
-
-so that the credentials are not in your shell history.
 
 ## Limitations
 
