@@ -1,7 +1,5 @@
 # Behavior
 * decide how to deal with errors on a check
-* decide whether to notify on exceeding given limit or once the limit is
- reached
 * try `fstat -f go.mod` (or on any other file), should I report the Free or
  Available? So `Bavail is the amount of blocks available to unprivileged users.
  Bfree is simply the total number of free blocks` Is the app running as root in

@@ -24,7 +24,7 @@ func run(args []string, out io.Writer) error {
 
 	flags := flag.NewFlagSet(args[0], flag.ExitOnError)
 	basedir := flags.String("basedir", "", "statfs syscall information will be gathered for each directory (depth 1) in this base directory")
-	limit := flags.Uint64("limit", 80, "notification will be sent if a disk exceeds given limit in percentage")
+	limit := flags.Uint64("limit", 80, "notification will be sent if a disk's usage is greater than or equal to given limit in percentage")
 	interval := flags.Uint("interval", 60, "interval in minutes at which the disk usage will be checked")
 	slackToken := flags.String("slackToken", "", "Slack Bot User OAuth Token used to post notifications to Slack")
 	slackChannel := flags.String("slackChannel", "", "Slack channel ID where notifications are posted to")

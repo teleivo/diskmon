@@ -14,16 +14,16 @@ import (
 
 // Report is the result of a disk usage check.
 type Report struct {
-	Limits []Stats // all disk usages exceeding a set limit
+	Limits []Stats // all disk usages greater than or equal to a set limit
 	Errors []error // encountered while gathering disk usages
 }
 
 // TODO embed fstat.FilesystemStat? I do not necessarily want to expose its
-// IsLimitExceeded method though
-// Stats are disk usage statistics of a disk exceeding a set limit.
+// HasReachedLimit method though
+// Stats are disk usage statistics of a disk that hit a set limit.
 type Stats struct {
-	Path  string // path at which disk usage was exceeded
-	Limit uint64 // limit that the disk usage exceeded
+	Path  string // path on a disk that hit the set limit
+	Limit uint64 // limit that the disk usage reached or exceeded
 	Free  uint64 // number of free bytes available to a non-privileged user
 	Used  uint64 // number of used bytes
 	Total uint64 // total number of bytes
@@ -57,7 +57,7 @@ func WriteNotifier(w io.Writer) Notifier {
 	return writeNotifier{w}
 }
 
-// Check reports exceeding disk usage.
+// Check reports disk's that reached or exceeded given limit.
 func Check(basedir string, limit uint64, logger *log.Logger, nt Notifier) error {
 	logger.Print("Checking disk usage")
 
@@ -67,7 +67,7 @@ func Check(basedir string, limit uint64, logger *log.Logger, nt Notifier) error 
 	}
 
 	if len(r.Limits) == 0 && len(r.Errors) == 0 {
-		logger.Print("No limits exceeded and no errors found")
+		logger.Printf("Disks are below limit %d%%", limit)
 		return nil
 	}
 
@@ -92,7 +92,7 @@ func checkDiskUsage(basedir string, limit uint64) (Report, error) {
 			continue
 		}
 
-		if fstat.IsExceedingLimit(limit) {
+		if fstat.HasReachedLimit(limit) {
 			r.Limits = append(r.Limits, Stats{
 				Path:  file.Name(),
 				Limit: limit,
