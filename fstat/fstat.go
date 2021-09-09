@@ -6,15 +6,14 @@ import (
 
 type FilesystemStat unix.Statfs_t
 
-// Used returns the number of used bytes.
+// Used returns the number of used bytes as observed by an non-privileged user.
 func (fs FilesystemStat) Used() uint64 {
-	return (fs.Blocks - fs.Ffree) * uint64(fs.Bsize)
+	return (fs.Blocks - fs.Bavail) * uint64(fs.Bsize)
 }
 
-// Free returns the number of free bytes available. Note that a non-privileged
-// user might have less bytes available (see Statfs_t.Bavail).
+// Free returns the number of bytes available to a non-privileged user.
 func (fs FilesystemStat) Free() uint64 {
-	return fs.Ffree * uint64(fs.Bsize)
+	return fs.Bavail * uint64(fs.Bsize)
 }
 
 // Total returns the total number of bytes.

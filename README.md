@@ -83,5 +83,6 @@ You can of course adapt the code to send notifications anywhere :smile:
 You can only provide one directory in which your mount points should be.
 For our use case the volumes we wanted to monitor were all in one directory.
 * Does not work on Windows due to the syscall we are making
-* Only checks disk usage for privileged users. A non-privileged user might have
-  less disk space available.
+* Only checks disk usage for non-privileged users. A privileged user might have
+  more disk space available. This might not work for you as it depends on the
+  user permissions of the user writing to the disk you want to monitor.
