@@ -61,7 +61,7 @@ func run(args []string, out io.Writer) error {
 		// TODO what if there is an error here on reading the basedir? At
 		// least log it for now
 		if err != nil {
-			log.Println(err.Error())
+			logger.Println(err.Error())
 		}
 	}
 }
