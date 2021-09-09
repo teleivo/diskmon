@@ -1,9 +1,10 @@
 # Diskmon
 
 [![Build and Test](https://github.com/teleivo/diskmon/actions/workflows/build_test.yml/badge.svg)](https://github.com/teleivo/diskmon/actions/workflows/build_test.yml)
+[![golangci-lint](https://github.com/teleivo/diskmon/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/teleivo/diskmon/actions/workflows/golangci-lint.yml)
+[![codecov](https://codecov.io/gh/teleivo/diskmon/branch/main/graph/badge.svg?token=1VFP7UVS4Z)](https://codecov.io/gh/teleivo/diskmon)
 [![Release](https://img.shields.io/github/release/teleivo/diskmon.svg)](https://github.com/teleivo/diskmon/releases/latest)
 [![Powered By: GoReleaser](https://img.shields.io/badge/powered%20by-goreleaser-green.svg)](https://github.com/goreleaser)
-[![codecov](https://codecov.io/gh/teleivo/diskmon/branch/main/graph/badge.svg?token=1VFP7UVS4Z)](https://codecov.io/gh/teleivo/diskmon)
 
 Diskmon will notify you via [Slack](https://slack.com) if a disk has reached
 (>=) a configurable size limit.
