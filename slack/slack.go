@@ -11,6 +11,7 @@ import (
 	"github.com/teleivo/diskmon/usage"
 )
 
+// TODO make private
 type Notifier struct {
 	channel string
 	client  *slack.Client
@@ -31,7 +32,7 @@ func (n *Notifier) Notify(r usage.Report) error {
 		log.Printf("Failed to get hostname %v", err)
 	}
 
-	msg := n.Message(r, host)
+	msg := n.message(r, host)
 
 	// TODO should we use a context? What is the default behavior, does posting
 	// the message ever time out?
@@ -41,8 +42,12 @@ func (n *Notifier) Notify(r usage.Report) error {
 	return err
 }
 
-func (n *Notifier) Message(r usage.Report, host string) slack.MsgOption {
-	// TODO clean up code
+func (n *Notifier) message(r usage.Report, host string) slack.MsgOption {
+	return slack.MsgOptionBlocks(formatMessage(r, host)...)
+}
+
+func formatMessage(r usage.Report, host string) []slack.Block {
+	// TODO move limit to usage.Report.Limit instead of with the usage.Stat
 	header := "Disk usage report"
 	if host != "" {
 		header = header + fmt.Sprintf(" for host %q", host)
@@ -50,25 +55,27 @@ func (n *Notifier) Message(r usage.Report, host string) slack.MsgOption {
 	headerText := slack.NewTextBlockObject("plain_text", header, false, false)
 	headerSection := slack.NewSectionBlock(headerText, nil, nil)
 
-	limitImage := slack.NewImageBlockElement("https://api.slack.com/img/blocks/bkb_template_images/notificationsWarningIcon.png", "notifications warning icon")
-	limitHeader := slack.NewTextBlockObject("mrkdwn", fmt.Sprintf("*Following disks have reached the usage limit of %d%%*", r.Limits[0].Limit), false, false)
-
+	limitHeader := slack.NewTextBlockObject("mrkdwn", fmt.Sprintf("⚠️ *Following disks have reached the usage limit of %d%%*", r.Limits[0].Limit), false, false)
 	var sb strings.Builder
 	for _, l := range r.Limits {
 		fmt.Fprintf(&sb, "• %q - %s/%s (free/total)\n", l.Path, humanize.Bytes(l.Free), humanize.Bytes(l.Total))
 	}
-	// TODO split errors into own section?
-	for _, e := range r.Errors {
-		sb.WriteString(e.Error())
-	}
-	rest := slack.NewTextBlockObject("mrkdwn", sb.String(), false, false)
-	restSection := slack.NewSectionBlock(rest, nil, nil)
+	limits := slack.NewTextBlockObject("mrkdwn", sb.String(), false, false)
+	limitSection := slack.NewContextBlock("limits", limitHeader, limits)
 
-	limitSection := slack.NewContextBlock(
-		"",
-		[]slack.MixedElement{limitImage, limitHeader}...,
-	)
 	divSection := slack.NewDividerBlock()
+	msg := []slack.Block{slack.Block(headerSection), divSection, limitSection}
 
-	return slack.MsgOptionBlocks(headerSection, divSection, limitSection, restSection)
+	if len(r.Errors) > 0 {
+		sb.Reset()
+		errorHeader := slack.NewTextBlockObject("mrkdwn", "⛔️ *Following error(s) have been encountered while gathering disk usage stats*", false, false)
+		for _, e := range r.Errors {
+			fmt.Fprintf(&sb, "• %s\n", e.Error())
+		}
+		errors := slack.NewTextBlockObject("mrkdwn", sb.String(), false, false)
+		errorsSection := slack.NewContextBlock("errors", errorHeader, errors)
+		msg = append(msg, errorsSection)
+	}
+
+	return msg
 }

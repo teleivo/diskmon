@@ -1,0 +1,42 @@
+{
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "plain_text",
+				"text": "Disk usage report for host \"staging-01\""
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"type": "context",
+			"block_id": "limits",
+			"elements": [
+				{
+					"type": "mrkdwn",
+					"text": "⚠️ *Following disks have reached the usage limit of 50%*"
+				},
+				{
+					"type": "mrkdwn",
+					"text": "• \"/mnt/volume1\" - 2.5 GB/5.0 GB (free/total)\n• \"/mnt/volume2\" - 500 MB/5.0 GB (free/total)\n"
+				}
+			]
+		},
+		{
+			"type": "context",
+			"block_id": "errors",
+			"elements": [
+				{
+					"type": "mrkdwn",
+					"text": "⛔️ *Following error(s) have been encountered while gathering disk usage stats*"
+				},
+				{
+					"type": "mrkdwn",
+					"text": "• error reading stats: no such file 'disk123'\n• error reading stats: no permission to read 'disk981'\n"
+				}
+			]
+		}
+	]
+}
