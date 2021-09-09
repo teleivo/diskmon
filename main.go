@@ -56,14 +56,12 @@ func run(args []string, out io.Writer) error {
 		return err
 	}
 	for {
-		select {
-		case <-t.C:
-			err := usage.Check(*basedir, *limit, logger, notifier)
-			// TODO what if there is an error here on reading the basedir? At
-			// least log it for now
-			if err != nil {
-				log.Println(err.Error())
-			}
+		<-t.C
+		err := usage.Check(*basedir, *limit, logger, notifier)
+		// TODO what if there is an error here on reading the basedir? At
+		// least log it for now
+		if err != nil {
+			log.Println(err.Error())
 		}
 	}
 }
