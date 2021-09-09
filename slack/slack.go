@@ -17,15 +17,15 @@ type notifier struct {
 	logger  *log.Logger
 }
 
-func New(token, channel string, logger *log.Logger) *notifier {
-	return &notifier{
+func New(token, channel string, logger *log.Logger) notifier {
+	return notifier{
 		channel: channel,
 		client:  slack.New(token),
 		logger:  logger,
 	}
 }
 
-func (n *notifier) Notify(r usage.Report) error {
+func (n notifier) Notify(r usage.Report) error {
 	host, err := os.Hostname()
 	if err != nil {
 		log.Printf("Failed to get hostname %v", err)
