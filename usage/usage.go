@@ -96,7 +96,7 @@ func checkDiskUsage(basedir string, limit uint64) (Report, error) {
 		if fstat.HasReachedLimit(limit) {
 			r.Limits = append(r.Limits, Stats{
 				Path:  file.Name(),
-				Free:  fstat.Free(),
+				Free:  fstat.Available(),
 				Used:  fstat.Used(),
 				Total: fstat.Total(),
 			})

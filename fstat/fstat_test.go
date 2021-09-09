@@ -7,7 +7,7 @@ import (
 )
 
 func TestFilesystemStat(t *testing.T) {
-	t.Run("FreeTotalUsed", func(t *testing.T) {
+	t.Run("AvailableTotalUsed", func(t *testing.T) {
 		fs := FilesystemStat(unix.Statfs_t{
 			Ffree:  200, // total free disk space
 			Bavail: 100, // free disk space accessible by a non-privileged user
@@ -15,14 +15,14 @@ func TestFilesystemStat(t *testing.T) {
 			Bsize:  1024,
 		})
 
-		if want := uint64(100 * 1024); fs.Free() != want {
-			t.Errorf("FilesystemStat.Free() got %d, want %d", fs.Free(), want)
+		if want := uint64(100 * 1024); fs.Available() != want {
+			t.Errorf("FilesystemStat.Available() got %d, want %d", fs.Available(), want)
 		}
 		if want := uint64(400 * 1024); fs.Total() != want {
-			t.Errorf("FilesystemStat.Total() got %d, want %d", fs.Free(), want)
+			t.Errorf("FilesystemStat.Total() got %d, want %d", fs.Total(), want)
 		}
 		if want := uint64((400 - 100) * 1024); fs.Used() != want {
-			t.Errorf("FilesystemStat.Used() got %d, want %d", fs.Free(), want)
+			t.Errorf("FilesystemStat.Used() got %d, want %d", fs.Used(), want)
 		}
 	})
 	t.Run("HasReachedLimit", func(t *testing.T) {

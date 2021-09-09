@@ -11,8 +11,8 @@ func (fs FilesystemStat) Used() uint64 {
 	return (fs.Blocks - fs.Bavail) * uint64(fs.Bsize)
 }
 
-// Free returns the number of bytes available to a non-privileged user.
-func (fs FilesystemStat) Free() uint64 {
+// Available returns the number of bytes available to a non-privileged user.
+func (fs FilesystemStat) Available() uint64 {
 	return fs.Bavail * uint64(fs.Bsize)
 }
 
