@@ -11,22 +11,21 @@ import (
 	"github.com/teleivo/diskmon/usage"
 )
 
-// TODO make private
-type Notifier struct {
+type notifier struct {
 	channel string
 	client  *slack.Client
 	logger  *log.Logger
 }
 
-func New(token, channel string, logger *log.Logger) *Notifier {
-	return &Notifier{
+func New(token, channel string, logger *log.Logger) *notifier {
+	return &notifier{
 		channel: channel,
 		client:  slack.New(token),
 		logger:  logger,
 	}
 }
 
-func (n *Notifier) Notify(r usage.Report) error {
+func (n *notifier) Notify(r usage.Report) error {
 	host, err := os.Hostname()
 	if err != nil {
 		log.Printf("Failed to get hostname %v", err)
@@ -42,7 +41,7 @@ func (n *Notifier) Notify(r usage.Report) error {
 	return err
 }
 
-func (n *Notifier) message(r usage.Report, host string) slack.MsgOption {
+func (n *notifier) message(r usage.Report, host string) slack.MsgOption {
 	return slack.MsgOptionBlocks(formatMessage(r, host)...)
 }
 
