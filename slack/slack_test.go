@@ -13,18 +13,17 @@ import (
 
 func TestFormatMessage(t *testing.T) {
 	r := usage.Report{
+		Limit: 50,
 		Limits: []usage.Stats{
 			{
 				Path:  "/mnt/volume1",
 				Free:  2500000000,
 				Total: 5000000000,
-				Limit: 50,
 			},
 			{
 				Path:  "/mnt/volume2",
 				Free:  500000000,
 				Total: 5000000000,
-				Limit: 70,
 			},
 		},
 		Errors: []error{

@@ -46,7 +46,6 @@ func (n *notifier) message(r usage.Report, host string) slack.MsgOption {
 }
 
 func formatMessage(r usage.Report, host string) []slack.Block {
-	// TODO move limit to usage.Report.Limit instead of with the usage.Stat
 	header := "Disk usage report"
 	if host != "" {
 		header = header + fmt.Sprintf(" for host %q", host)
@@ -54,7 +53,7 @@ func formatMessage(r usage.Report, host string) []slack.Block {
 	headerText := slack.NewTextBlockObject("plain_text", header, false, false)
 	headerSection := slack.NewSectionBlock(headerText, nil, nil)
 
-	limitHeader := slack.NewTextBlockObject("mrkdwn", fmt.Sprintf("⚠️ *Following disks have reached the usage limit of %d%%*", r.Limits[0].Limit), false, false)
+	limitHeader := slack.NewTextBlockObject("mrkdwn", fmt.Sprintf("⚠️ *Following disks have reached the usage limit of %d%%*", r.Limit), false, false)
 	var sb strings.Builder
 	for _, l := range r.Limits {
 		fmt.Fprintf(&sb, "• %q - %s/%s (free/total)\n", l.Path, humanize.Bytes(l.Free), humanize.Bytes(l.Total))

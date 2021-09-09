@@ -14,6 +14,7 @@ import (
 
 // Report is the result of a disk usage check.
 type Report struct {
+	Limit  uint64  // limit that the disk usage reached or exceeded
 	Limits []Stats // all disk usages greater than or equal to a set limit
 	Errors []error // encountered while gathering disk usages
 }
@@ -75,7 +76,7 @@ func Check(basedir string, limit uint64, logger *log.Logger, nt Notifier) error 
 }
 
 func checkDiskUsage(basedir string, limit uint64) (Report, error) {
-	r := Report{}
+	r := Report{Limit: limit}
 	files, err := ioutil.ReadDir(basedir)
 	if err != nil {
 		return r, fmt.Errorf("error reading basedir: %w", err)
@@ -95,7 +96,6 @@ func checkDiskUsage(basedir string, limit uint64) (Report, error) {
 		if fstat.HasReachedLimit(limit) {
 			r.Limits = append(r.Limits, Stats{
 				Path:  file.Name(),
-				Limit: limit,
 				Free:  fstat.Free(),
 				Used:  fstat.Used(),
 				Total: fstat.Total(),
