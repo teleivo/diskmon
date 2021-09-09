@@ -12,6 +12,7 @@
 
 # Technical
 * logging does not report the current time in UTC as I thought it would with my current configuration
+* update to go 1.17
 
 # Notification Message
 
