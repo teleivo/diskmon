@@ -37,6 +37,8 @@ func (n notifier) Notify(r usage.Report) error {
 		n.channel,
 		slack.MsgOptionBlocks(formatMessage(r, host)...),
 	)
+	// TODO I might not have posted a message on slack. Think about how to
+	// handle the error
 	n.logger.Printf("Posted slack message on channel")
 
 	return err
