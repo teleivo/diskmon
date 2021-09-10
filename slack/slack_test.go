@@ -17,11 +17,13 @@ func TestFormatMessage(t *testing.T) {
 		Limits: []usage.Stats{
 			{
 				Path:  "/mnt/volume1",
+				Used:  2500000000,
 				Free:  2500000000,
 				Total: 5000000000,
 			},
 			{
 				Path:  "/mnt/volume2",
+				Used:  4500000000,
 				Free:  500000000,
 				Total: 5000000000,
 			},

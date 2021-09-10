@@ -53,7 +53,8 @@ func formatMessage(r usage.Report, host string) []slack.Block {
 	limitHeader := slack.NewTextBlockObject("mrkdwn", fmt.Sprintf("⚠️ *Following disks have reached the usage limit of %d%%*", r.Limit), false, false)
 	var sb strings.Builder
 	for _, l := range r.Limits {
-		fmt.Fprintf(&sb, "• %q - %s/%s (free/total)\n", l.Path, humanize.Bytes(l.Free), humanize.Bytes(l.Total))
+		perc := uint64((float64(l.Used) / float64(l.Total)) * 100)
+		fmt.Fprintf(&sb, "• %q - *%d%% full* - %s/%s (free/total)\n", l.Path, perc, humanize.Bytes(l.Free), humanize.Bytes(l.Total))
 	}
 	limits := slack.NewTextBlockObject("mrkdwn", sb.String(), false, false)
 	limitSection := slack.NewContextBlock("limits", limitHeader, limits)

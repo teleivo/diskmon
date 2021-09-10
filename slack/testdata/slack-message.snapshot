@@ -20,7 +20,7 @@
 				},
 				{
 					"type": "mrkdwn",
-					"text": "• \"/mnt/volume1\" - 2.5 GB/5.0 GB (free/total)\n• \"/mnt/volume2\" - 500 MB/5.0 GB (free/total)\n"
+					"text": "• \"/mnt/volume1\" - *50% full* - 2.5 GB/5.0 GB (free/total)\n• \"/mnt/volume2\" - *90% full* - 500 MB/5.0 GB (free/total)\n"
 				}
 			]
 		},
