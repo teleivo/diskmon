@@ -24,8 +24,11 @@ func (fs FilesystemStat) Total() uint64 {
 // HasReachedLimit returns true if the used disk space is greater than or equal
 // to the given limit in percent.
 func (fs FilesystemStat) HasReachedLimit(limit uint64) bool {
-	used := uint64((float64(fs.Used()) / float64(fs.Total())) * 100)
-	return used >= limit
+	return fs.usedPercentage() >= limit
+}
+
+func (fs FilesystemStat) usedPercentage() uint64 {
+	return uint64((float64(fs.Used()) / float64(fs.Total())) * 100)
 }
 
 func GetFilesystemStat(path string) (FilesystemStat, error) {
