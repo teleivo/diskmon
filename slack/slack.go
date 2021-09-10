@@ -31,18 +31,15 @@ func (n notifier) Notify(r usage.Report) error {
 		n.logger.Printf("Failed to get hostname %v", err)
 	}
 
-	msg := n.message(r, host)
-
 	// TODO should we use a context? What is the default behavior, does posting
 	// the message ever time out?
-	_, _, err = n.client.PostMessage(n.channel, msg)
+	_, _, err = n.client.PostMessage(
+		n.channel,
+		slack.MsgOptionBlocks(formatMessage(r, host)...),
+	)
 	n.logger.Printf("Posted slack message on channel")
 
 	return err
-}
-
-func (n *notifier) message(r usage.Report, host string) slack.MsgOption {
-	return slack.MsgOptionBlocks(formatMessage(r, host)...)
 }
 
 func formatMessage(r usage.Report, host string) []slack.Block {
