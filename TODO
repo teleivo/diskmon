@@ -11,6 +11,5 @@
 // }
 
 # Technical
-* update to go 1.17
 * update golangci-lint?
 * restructure package dependencies and increase coverage
