@@ -11,5 +11,4 @@
 // }
 
 # Technical
-* update golangci-lint?
 * restructure package dependencies and increase coverage
