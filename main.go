@@ -39,7 +39,7 @@ func run(args []string, out io.Writer) error {
 		return errors.New("both slackChannel and slackApiToken must be either provided or not")
 	}
 
-	logger := log.New(out, args[0]+" ", log.LUTC)
+	logger := log.New(out, args[0]+" ", log.LstdFlags|log.LUTC)
 	var notifier usage.Notifier
 	if *slackToken != "" && *slackChannel != "" {
 		notifier = slack.New(*slackToken, *slackChannel, logger)
