@@ -12,5 +12,5 @@
 
 # Technical
 =======
-* update to go 1.17
+* update to go 1.17. goreleaser does not seem to support 1.17 yet.
 * restructure package dependencies and increase coverage
