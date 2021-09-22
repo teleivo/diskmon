@@ -11,4 +11,6 @@
 // }
 
 # Technical
+=======
+* update to go 1.17
 * restructure package dependencies and increase coverage
