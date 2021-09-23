@@ -31,22 +31,18 @@ usage information we get.
 
 ## Get started
 
-Dowload a [pre-built binary](https://github.com/teleivo/diskmon/releases) or build the binary yourself
+Dowload a [pre-built binary](https://github.com/teleivo/diskmon/releases).
+
+Copy the binary to a path that is dicoverable by your shell via the $PATH
+environment variable.
+
+Run it
 
 ```sh
-go build -o /usr/local/bin/diskmon
+diskmon -basedir <directory> -limit 65
 ```
 
-Change the destination to a path of your choice and make sure it can be found
-by your shell via the $PATH variable.
-
-Or run it directly
-
-```sh
-go run main.go -basedir <directory> -limit 65
-```
-
-which will write usage reports to stdout.
+Run `diskmon --help` to see all the available flags and their defaults.
 
 ### Notifications
 
@@ -57,8 +53,8 @@ Notifications can be sent to
 For Slack please follow the Slack documentation on how to create a Slack App Bot.
 You can also follow this YouTube tutorial [Golang Tutorial: Build a Slack Bot](https://youtu.be/n-7l-N541u0).
 
-You will then need to pass the Slack Bot User OAuth Token and the channel ID to
-the binary via CLI flags.
+You will then need to pass the Slack **Bot User OAuth Token** and the channel
+ID to the binary via CLI flags.
 
 Prefer passing credentials for example like so
 
@@ -69,6 +65,25 @@ diskmon -basedir <directory> -limit 65 \
 ```
 
 so that the credentials are not in your shell history.
+
+## Build from source
+
+You need to have [Go 1.16](https://golang.org) installed to build the binary yourself.
+
+To build you can run
+
+```sh
+go build -o diskmon
+```
+
+Or build and run diskmon directly
+
+```sh
+go run main.go -basedir <directory> -limit 65
+```
+
+to familiarize yourself with the flags. The above will write usage reports to
+stdout.
 
 ## Limitations
 
