@@ -21,10 +21,9 @@ type Report struct {
 
 // TODO embed fstat.FilesystemStat? I do not necessarily want to expose its
 // HasReachedLimit method though
-// Stats are disk usage statistics of a disk that hit a set limit.
+// Stats are disk usage statistics of a disk.
 type Stats struct {
 	Path  string // path on a disk that hit the set limit
-	Limit uint64 // limit that the disk usage reached or exceeded
 	Free  uint64 // number of free bytes available
 	Used  uint64 // number of used bytes
 	Total uint64 // total number of bytes
