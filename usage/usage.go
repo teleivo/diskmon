@@ -41,7 +41,7 @@ type writeNotifier struct {
 
 func (wn writeNotifier) Notify(r Report) error {
 	for _, l := range r.Limits {
-		fmt.Fprintf(wn, "Free/Total %s/%s %q - reached limit of %d%%\n", humanize.Bytes(l.Free), humanize.Bytes(l.Total), l.Path, l.Limit)
+		fmt.Fprintf(wn, "Used/Total %s/%s %q - reached limit of %d%%\n", humanize.Bytes(l.Used), humanize.Bytes(l.Total), l.Path, r.Limit)
 	}
 	for _, e := range r.Errors {
 		fmt.Fprintf(wn, "%s\n", e.Error())
