@@ -1,0 +1,20 @@
+[Unit]
+Description=Diskmon monitors mount points
+Documentation=https://github.com/teleivo/diskmon
+
+# Slack notifications need networking to be up. Remove if you only use stdout
+# notifications.
+After=network-online.target
+Wants=network-online.target
+# Adjust to your needs!
+# see https://www.freedesktop.org/software/systemd/man/systemd.unit.html#RequiresMountsFor=
+RequiresMountsFor=/var
+
+[Service]
+Type=simple
+# TODO how to specify the API token in a safe way?
+# Adjust to your needs!
+ExecStart=/usr/local/bin/diskmon -basedir /var -interval 1 -limit 25
+
+[Install]
+WantedBy=multi-user.target
