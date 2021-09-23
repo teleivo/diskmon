@@ -66,6 +66,10 @@ diskmon -basedir <directory> -limit 65 \
 
 so that the credentials are not in your shell history.
 
+### Running as a service
+
+Read [Running diskmon as a service](./examples/README.md).
+
 ## Build from source
 
 You need to have [Go 1.16](https://golang.org) installed to build the binary yourself.
