@@ -7,12 +7,14 @@ on:
       - main
   pull_request:
 jobs:
-  golangci:
+  golangci-lint:
     name: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
         with:
-          version: v1.42.1
+          go-version: 1.17
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3.1.0
