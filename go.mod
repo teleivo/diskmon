@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/dustin/go-humanize v1.0.0
 	github.com/google/go-cmp v0.5.8
-	github.com/slack-go/slack v0.11.1
+	github.com/slack-go/slack v0.11.2
 	golang.org/x/sys v0.0.0-20210903071746-97244b99971b
 )
 
